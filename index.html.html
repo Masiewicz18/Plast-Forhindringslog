@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plus Pack – Forhindringsregistrering (Edge/Win10)</title>
+<style>
+  :root{--bg:#f6f8fb;--card:#ffffff;--line:#e6ecf3;--text:#0f172a;--muted:#6b7280;--brand:#0a61ae}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{margin:0;font-family:Segoe UI,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+
+  .top{background:var(--brand);color:#fff;padding:10px 16px}
+  .top .title{font-weight:800}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:14px;margin-bottom:12px}
+  .h{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px}
+  .h h3{margin:0;font-size:16px}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+  .col-12{grid-column:span 12}
+  .col-6{grid-column:span 6}
+  .col-4{grid-column:span 4}
+  .col-3{grid-column:span 3}
+
+  label{display:block;font-size:11px;color:var(--muted);margin:0 0 4px}
+  label.req:after{content:" *";color:#dc2626;font-weight:700}
+  .req-star{color:#dc2626;font-weight:700}
+  input,select,textarea{width:100%;border:1px solid #dfe7f2;border-radius:10px;padding:10px 12px;background:#fff;font-size:15px;line-height:1.35}
+  textarea{min-height:120px}
+  .hint{font-size:12px;color:var(--muted)}
+  .sep{height:1px;background:var(--line);margin:8px 0}
+
+  .btn{border:1px solid #dbe4ef;background:#fff;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}
+  .btn.primary{background:#e8f1ff;border-color:#cfe2ff;color:#0a3d91}
+  .btn.danger{background:#fff1f1;border-color:#f3b3b3;color:#7f1d1d}
+  .btn.ghost{background:transparent;border:1px dashed #dbe4ef}
+  .btn.xs{padding:4px 8px;font-size:12px;border-radius:8px}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+
+  /* Chips */
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #dbe4ef;background:#f5f9ff;border-radius:999px;padding:6px 10px;font-size:13px;cursor:pointer}
+  .chip input{width:16px;height:16px}
+  .more{display:none;margin-top:6px}
+  .errmsg{font-size:12px;color:#b91c1c;margin-top:4px}
+
+  /* Inline confirm */
+  .confirm{display:none;margin-top:8px;padding:8px;border:1px solid #fecaca;background:#fff1f2;border-radius:10px}
+
+  /* Log */
+  .log{list-style:none;margin:0;padding:0;border:1px dashed #dbe4ef;border-radius:10px}
+  .rowL{display:flex;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid #eef2f7;background:#fff}
+  .rowL:last-child{border-bottom:0}
+  .ts{min-width:160px;color:#6b7280;font-size:12px}
+  .meta{margin-left:auto;color:#6b7280;font-size:12px;min-width:220px;text-align:right}
+  .badge{display:inline-block;border-radius:999px;padding:2px 8px;font-size:12px;border:1px solid #e2e8f0;background:#faf5ff;color:#6b21a8}
+  .desctext{font-size:15px;color:#0f172a;line-height:1.45}
+
+  @media (max-width:900px){.grid{display:block}.meta{text-align:left;margin-left:0;margin-top:6px}.ts{min-width:120px}}
+</style>
+</head>
+<body>
+  <div class="top"><span class="title">Plus Pack – Forhindringsregistrering</span></div>
+  <div class="wrap">
+
+    <!-- BASIS -->
+    <div class="card">
+      <div class="h"><h3>Basisoplysninger</h3><span class="hint">Basis gemmes og bruges ved nye registreringer.</span></div>
+      <div class="grid">
+        <div class="col-6">
+          <label class="req">Linje / maskine</label>
+          <select id="bMachine"></select>
+        </div>
+        <div class="col-3">
+          <label class="req">Operatør</label>
+          <input id="bOperator" type="text" placeholder="">
+        </div>
+        <div class="col-3" style="text-align:right">
+          <label>&nbsp;</label>
+          <button id="btn-clear-base" class="btn" type="button">Ryd basis</button>
+        </div>
+
+        <div class="col-4">
+          <label class="req">Ordre nr.</label>
+          <input id="bOrderNo" type="text" placeholder="">
+        </div>
+        <div class="col-4">
+          <label class="req">Vare nr.</label>
+          <input id="bItemNo" type="text" placeholder="">
+        </div>
+        <div class="col-4">
+          <label class="req">Værktøjs nr.</label>
+          <input id="bToolNo" type="text" placeholder="fx T15050-10111">
+        </div>
+        <div class="col-12">
+          <div class="chips">
+            <label class="chip"><input id="bNoOrder" type="checkbox"> Ingen ordre (midlertidigt)</label>
+            <label class="chip"><input id="bLockOrder" type="checkbox"> Lås nuværende ordredata</label>
+            <div style="margin-left:auto"><button id="btn-clear-order" class="btn ghost" type="button">Ryd ordre</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORHINDRINGS REG. -->
+    <div class="card">
+      <div class="h"><h3>Forhindrings reg.</h3><span class="hint">Vælg årsag, skriv og tilføj.</span></div>
+      <div class="grid">
+        <div class="col-12">
+          <div class="hint" style="margin-bottom:4px"><b>Årsag <span class="req-star">*</span></b></div>
+          <div id="reasonsTop" class="chips" style="margin-bottom:6px"></div>
+          <div id="reasonsMore" class="more"></div>
+          <button id="btn-more" class="btn ghost" type="button">Vis flere årsager</button>
+          <div id="err-reason" class="errmsg" style="display:none">Vælg en årsag.</div>
+        </div>
+
+        <div class="col-3">
+          <label class="req">Nedetid (min)</label>
+          <input id="downMin" type="text" inputmode="numeric" placeholder="">
+          <div id="err-downMin" class="errmsg" style="display:none">Angiv 0–1440.</div>
+        </div>
+        <div class="col-9"></div>
+
+        <div class="col-12">
+          <label class="req">Uddybende forklaring</label>
+          <textarea id="desc" maxlength="1000" placeholder="" style="min-height:170px"></textarea>
+        </div>
+        <div class="col-12">
+          <label class="req">Handling</label>
+          <textarea id="action" maxlength="1000" placeholder="" style="min-height:150px"></textarea>
+          <div id="err-action" class="errmsg" style="display:none">Skal udfyldes.</div>
+        </div>
+
+        <div class="col-6">
+          <button id="btn-clear-hind" class="btn ghost" type="button">Ryd forhindring</button>
+          <button id="btn-add-hind" class="btn primary" type="button" disabled>Tilføj forhindring</button>
+        </div>
+        <div class="col-6" style="text-align:right">
+          <select id="quickLast"><option value="">— Vælg tidligere registrering —</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTRERINGER -->
+    <div class="card">
+      <div class="h">
+        <h3>Registreringer</h3>
+        <button id="btn-clear-list" class="btn danger" type="button">Ryd registreringsliste</button>
+      </div>
+      <div id="listConfirm" class="confirm">
+        <b>Er du sikker?</b> Dette sletter alle registreringer lokalt. Basisoplysninger bevares.
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+          <button id="btn-list-cancel" class="btn" type="button">Fortryd</button>
+          <button id="btn-list-do" class="btn danger" type="button">Ja, slet registreringer</button>
+        </div>
+      </div>
+      <ul id="mixList" class="log"></ul>
+    </div>
+  </div>
+
+<script>
+/********** ES5 – Edge/Win10 **********/
+function $(id){return document.getElementById(id)}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function fmtDate(d){var dt=(d instanceof Date)?d:new Date(d);try{return dt.toLocaleString('da-DK')}catch(e){return dt.toString()}}
+function escapeHtml(s){if(s===null||s===undefined)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\\"/g,'&quot;')}
+
+/* Keys */
+var KEY_SETTINGS='pp.fx.settings.v1';
+var KEY_EVENTS='pp.fx.events.v1';
+var KEY_RECENT='pp.fx.recentReasons.v1';
+var KEY_REASON='pp.fx.selectedReason.v1';
+var KEY_FORM='pp.fx.formsnapshot.v1';
+var KEY_UI='pp.fx.ui.v1';
+var KEY_UI_SCROLL='pp.fx.ui.scrollY.v1';
+var KEY_FEED='pp.fx.feed.v1'; /* retry-kø */
+
+/* DIN POWER AUTOMATE-URL (indsat som ønsket) */
+var FLOW_URL="https://default430cd76f558540b4b6d4f372acf579.16.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0ca282b8f7264a3e9f20b8fb30ce0e32/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gFT68gV-bdeNIAIO9ccsyGxGQnh28l7DsyRqx49QKUA";
+
+/* Data */
+var MACHINES=["50","51","52","53","54","55","60","61","62","63","64","65","70","71","72","73","74","75","76","77","Kværn 1","Kværn 2","Kværn 3"];
+var ALL_REASONS=["Kvalitet","Folie brand","Nedtæng folie","Varme folder","Matriale mangel","Forl.Andet Folie","Forl.Anden PK METODE","LITÆT LI.FORM","LITÆT OV.FORM","KNIVSKIFT","Folie Kvalitet","Folie Afvikler","Varme skab","Thermoformning","Standsning","Stable","Transport til pakning","Værktøj","Uheld","Nærved","Ordrer skift","Andet"];
+
+/* Accessors */
+function settings(){return load(KEY_SETTINGS,{})}
+function saveSettings(s){save(KEY_SETTINGS,s)}
+function events(){return load(KEY_EVENTS,[])}
+function saveEvents(a){save(KEY_EVENTS,a)}
+function feed(){return load(KEY_FEED,[])}
+function saveFeed(a){save(KEY_FEED,a)}
+
+/* Scroll remember */
+function saveScroll(){ try{ localStorage.setItem(KEY_UI_SCROLL, String(window.pageYOffset||document.documentElement.scrollTop||0)); }catch(e){} }
+function restoreScroll(){ try{ var y=parseInt(localStorage.getItem(KEY_UI_SCROLL)||'0',10)||0; window.scrollTo(0,y); }catch(e){} }
+
+/* BASIS */
+function fillMachines(){
+  var s=settings(), i, html='<option value="">— Vælg —</option>';
+  for(i=0;i<MACHINES.length;i++){var m=MACHINES[i], sel=(s.line===m)?' selected':''; html+='<option'+sel+'>'+m+'</option>'}
+  $('bMachine').innerHTML=html;
+}
+function syncBase(){
+  var s=settings();
+  s.line=$('bMachine').value||'';
+  s.operator=$('bOperator').value||'';
+  s.orderNo=$('bOrderNo').value||'';
+  s.itemNo=$('bItemNo').value||'';
+  s.toolNo=$('bToolNo').value||'';
+  s.noOrder=$('bNoOrder').checked===true;
+  saveSettings(s);
+}
+function applyNoOrder(){
+  var on=$('bNoOrder').checked, ids=['bOrderNo','bItemNo','bToolNo'], i;
+  for(i=0;i<ids.length;i++){
+    var el=$(ids[i]);
+    if(on){el.value='';el.disabled=true;el.style.background='#f3f4f6'}
+    else if(!$('bLockOrder').checked){el.disabled=false;el.style.background='#fff'}
+  }
+  syncBase(); validate();
+}
+function applyLock(){
+  var lock=$('bLockOrder').checked, ids=['bOrderNo','bItemNo','bToolNo'], i;
+  for(i=0;i<ids.length;i++){
+    var el=$(ids[i]);
+    if(el){el.disabled=lock||$('bNoOrder').checked;el.style.background=(lock||$('bNoOrder').checked)?'#f3f4f6':'#fff'}
+  }
+  syncBase();
+}
+
+/* ÅRSAGER */
+function getRecent(){return load(KEY_RECENT,[])}
+function pushRecent(v){
+  if(!v) return;
+  var r=getRecent(), i, idx=-1;
+  for(i=0;i<r.length;i++){ if(r[i]===v){ idx=i; break; } }
+  if(idx>-1) r.splice(idx,1);
+  r.unshift(v);
+  while(r.length>20) r.pop();
+  save(KEY_RECENT,r);
+}
+function uniqConcat(a,b){var i,seen={},out=[];for(i=0;i<a.length;i++){if(!seen[a[i]]){seen[a[i]]=1;out.push(a[i]);}}for(i=0;i<b.length;i++){if(!seen[b[i]]){seen[b[i]]=1;out.push(b[i]);}}return out;}
+function chipHTML(lbl){return '<label class="chip"><input type="radio" name="reasonRadio" value="'+lbl+'">'+lbl+'</label>';}
+function renderReasons(){
+  var recent=getRecent();
+  var ordered=uniqConcat(recent,ALL_REASONS);
+  var top=ordered.slice(0,5), rest=ordered.slice(5), i, ht='', hm='';
+  for(i=0;i<top.length;i++){ ht+=chipHTML(top[i]); }
+  for(i=0;i<rest.length;i++){ hm+=chipHTML(rest[i]); }
+  $('reasonsTop').innerHTML=ht;
+  $('reasonsMore').innerHTML=hm;
+  $('reasonsTop').onclick=onReason;
+  $('reasonsMore').onclick=onReason;
+  var saved=load(KEY_REASON,''); if(saved){ setReason(saved); }
+  var ui=load(KEY_UI,{more:false});
+  $('reasonsMore').style.display = ui.more ? 'block' : 'none';
+  $('btn-more').innerHTML = ui.more ? 'Skjul årsager' : 'Vis flere årsager';
+}
+function onReason(e){
+  e=e||window.event; var t=e.target||e.srcElement;
+  if(t && t.name==='reasonRadio'){
+    var v=t.value||'';
+    save(KEY_REASON, v);
+    $('err-reason').style.display='none';
+    validate();
+  }
+}
+function getReason(){
+  var r=document.getElementsByName('reasonRadio'), i;
+  for(i=0;i<r.length;i++){ if(r[i].checked) return r[i].value; }
+  return '';
+}
+function setReason(v){
+  var r=document.getElementsByName('reasonRadio'), i, hit=false;
+  for(i=0;i<r.length;i++){ if(r[i].value===v){ r[i].checked=true; hit=true; break; } }
+  return hit;
+}
+
+/* VALIDATION */
+function showErr(id,cond){var el=$(id); if(el){ el.style.display = cond ? 'block' : 'none'; }}
+function validate(show){
+  var baseMachine = ((''+($('bMachine').value||'')).length>0);
+  var baseOperator = ((''+($('bOperator').value||'')).trim().length>0);
+  var needOrder = !($('bNoOrder').checked);
+  var ordOk = !needOrder || (
+    ((''+($('bOrderNo').value||'')).trim().length>0) &&
+    ((''+($('bItemNo').value||'')).trim().length>0) &&
+    ((''+($('bToolNo').value||'')).trim().length>0)
+  );
+  var reasonOk = (getReason().length>0);
+  var dm=(''+($('downMin').value||'')); var n=parseInt(dm.replace(/[^0-9]/g,''),10);
+  var downOk = !isNaN(n) && n>=0 && n<=1440;
+  var descOk = ((''+($('desc').value||'')).trim().length>0);
+  var actionOk = ((''+($('action').value||'')).trim().length>0);
+
+  if(show){ showErr('err-reason', !reasonOk); showErr('err-downMin', !downOk); }
+
+  var ok = baseMachine && baseOperator && ordOk && reasonOk && downOk && descOk && actionOk;
+  var b=$('btn-add-hind'); if(b){ b.disabled = !ok; }
+  return ok;
+}
+
+/* ====== FLOW-POST (ingen fetch – kun XHR) ====== */
+function postToFlow(payload, cb){
+  try{
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST', FLOW_URL, true);
+    xhr.setRequestHeader('Content-Type','application/json;charset=UTF-8');
+    xhr.onreadystatechange=function(){
+      if(xhr.readyState===4){
+        var ok=(xhr.status>=200 && xhr.status<300);
+        cb && cb(ok);
+      }
+    };
+    xhr.onerror=function(){ cb && cb(false); };
+    xhr.send(JSON.stringify(payload));
+  }catch(e){ cb && cb(false); }
+}
+
+/* Retry-kø (offline/fejl) */
+function queueUpload(ev){
+  var f=feed(); f.push({sent:false,payload:ev,ts:new Date().toISOString()});
+  saveFeed(f); flushUploadQueue();
+}
+function flushUploadQueue(){
+  var f=feed(), changed=false;
+  function next(i){
+    if(i>=f.length){ if(changed) saveFeed(f); return; }
+    if(f[i].sent){ return next(i+1); }
+    postToFlow(f[i].payload, function(ok){
+      if(ok){ f[i].sent=true; changed=true; }
+      next(i+1);
+    });
+  }
+  next(0);
+}
+
+/* CRUD Forhindring */
+function addHind(){
+  if(!validate(true)) return;
+  var s=settings(), reason=getReason();
+  var dm=$('downMin').value.replace(/[^0-9]/g,''); var n=parseInt(dm,10); if(isNaN(n)) n=0;
+  var row={
+    ts:new Date().toISOString(),
+    reason:reason,
+    machine:s.line||'',
+    downtime_min:n,
+    description:$('desc').value||'',
+    action:$('action').value||'',
+    orderNo:s.orderNo||'',
+    itemNo:s.itemNo||'',
+    toolNo:s.toolNo||'',
+    operator:s.operator||'',
+    name:'Forhindring – '+(reason||'')
+  };
+
+  // Lokalt UI
+  var arr=events(); arr.unshift({
+    type:'hind',
+    ts:row.ts, reason:row.reason, machine:row.machine, downtime_min:row.downtime_min,
+    description:row.description, action:row.action, orderNo:row.orderNo, itemNo:row.itemNo,
+    toolNo:row.toolNo, operator:row.operator
+  });
+  saveEvents(arr);
+
+  // Send til Flow (med retry-kø ved fejl)
+  postToFlow(row, function(ok){ if(!ok){ queueUpload(row); } });
+
+  pushRecent(reason);
+  renderReasons();
+  save(KEY_REASON, reason);
+  renderLog(); refreshQuick();
+
+  $('action').value='';
+  validate();
+}
+function clearHind(){
+  var r=document.getElementsByName('reasonRadio'), i;
+  for(i=0;i<r.length;i++){ r[i].checked=false; }
+  try{ localStorage.removeItem(KEY_REASON); }catch(e){}
+  if($('downMin')) $('downMin').value='';
+  if($('desc')) $('desc').value='';
+  if($('action')) $('action').value='';
+  showErr('err-reason', false); showErr('err-downMin', false);
+  validate();
+}
+
+/* Log */
+function renderLog(){
+  var list=$('mixList'); list.innerHTML='';
+  var arr=events().slice(); arr.sort(function(a,b){ return new Date(b.ts)-new Date(a.ts); });
+  var i; for(i=0;i<arr.length;i++){
+    var it=arr[i];
+    var li=document.createElement('li'); li.className='rowL';
+    var ts=document.createElement('div'); ts.className='ts'; ts.innerHTML=fmtDate(it.ts);
+    var mid=document.createElement('div');
+    mid.innerHTML =
+      '<span class="badge">Forhindring</span> <b>'+escapeHtml(it.reason||'')+'</b> · '
+      + escapeHtml(it.machine||'')
+      + ' · <span class="hint">'+(it.downtime_min||0)+' min</span>'
+      + (it.description?('<div class="desctext"><b>Uddybende:</b> '+escapeHtml(it.description)+'</div>'):'')
+      + (it.action?('<div class="desctext"><b>Handling:</b> '+escapeHtml(it.action)+'</div>'):'' );
+    var right=document.createElement('div'); right.className='meta';
+    right.innerHTML='Ordre: '+escapeHtml(it.orderNo||'')+' · Vare: '+escapeHtml(it.itemNo||'')+' · Værktøj: '+escapeHtml(it.toolNo||'')+' · Operatør: '+escapeHtml(it.operator||'');
+    var del=document.createElement('button'); del.className='btn xs danger'; del.innerHTML='Slet';
+    del.onclick=(function(tsv){ return function(){ delRow(tsv); }; })(it.ts);
+    right.appendChild(document.createElement('br')); right.appendChild(del);
+    li.appendChild(ts); li.appendChild(mid); li.appendChild(right); list.appendChild(li);
+  }
+}
+function delRow(ts){
+  var arr=events(), i, idx=-1;
+  for(i=0;i<arr.length;i++){ if(arr[i].ts===ts){ idx=i; break; } }
+  if(idx>-1){ arr.splice(idx,1); saveEvents(arr); renderLog(); refreshQuick(); }
+}
+
+/* Quick udfyld (seneste 10) */
+function refreshQuick(){
+  var rows=events().slice(0,10), i, html='<option value="">— Vælg tidligere registrering —</option>';
+  for(i=0;i<rows.length;i++){
+    var r=rows[i];
+    html+='<option value="'+r.ts+'">'+(r.reason||'?')+' · '+(r.machine||'?')+' · '+(r.downtime_min||0)+'m</option>';
+  }
+  $('quickLast').innerHTML=html;
+}
+function applyFromTs(ts){
+  var rows=events(), i, ev=null;
+  for(i=0;i<rows.length;i++){ if(rows[i].ts===ts){ ev=rows[i]; break; } }
+  if(!ev) return;
+  setReason(ev.reason||''); $('downMin').value=String(ev.downtime_min||''); $('desc').value=ev.description||''; $('action').value=ev.action||'';
+  validate();
+}
+
+/* Snapshot – autosave ALL inputs midt i indtastning */
+function collectFormValues(){
+  var snap={}, all=document.querySelectorAll('input,select,textarea'), i;
+  for(i=0;i<all.length;i++){
+    var el=all[i]; if(!el.id && !el.name) continue;
+    var key=el.id || (el.name?('name:'+el.name):('idx:'+i));
+    var t=(el.type||'').toLowerCase();
+    if(t==='checkbox' || t==='radio'){ snap[key]={t:t,v:el.checked,val:el.value}; }
+    else { snap[key]={t:t,v:el.value}; }
+  }
+  return snap;
+}
+function applyFormValues(snap){
+  if(!snap) return;
+  var k; for(k in snap){
+    if(!snap.hasOwnProperty(k)) continue;
+    var meta=snap[k];
+    var el=(k.indexOf('name:')===0)?document.getElementsByName(k.substr(5))[0]:document.getElementById(k);
+    if(!el) continue;
+    var t=(el.type||'').toLowerCase();
+    if(t==='checkbox' || t==='radio'){
+      if(t==='radio'){
+        var group=(el.name&&document.getElementsByName(el.name))||[], i;
+        for(i=0;i<group.length;i++){ var r=group[i]; if(r.value===meta.val){ r.checked=!!meta.v; } }
+      }else{ el.checked=!!meta.v; }
+    }else{ el.value=(meta.v!=null)?meta.v:''; }
+  }
+}
+
+/* Bind */
+function bind(){
+  fillMachines(); renderReasons(); renderLog(); refreshQuick();
+
+  var s=settings();
+  $('bMachine').value=s.line||'';
+  $('bOperator').value=s.operator||'';
+  $('bOrderNo').value=s.orderNo||'';
+  $('bItemNo').value=s.itemNo||'';
+  $('bToolNo').value=s.toolNo||'';
+  if(s.noOrder){ $('bNoOrder').checked=true }
+  applyNoOrder(); applyLock();
+
+  $('bMachine').onchange=function(){syncBase();validate()};
+  $('bOperator').oninput=function(){syncBase();validate()};
+  $('bOrderNo').oninput=function(){syncBase();validate()};
+  $('bItemNo').oninput=function(){syncBase();validate()};
+  $('bToolNo').oninput=function(){syncBase();validate()};
+  $('bNoOrder').onchange=function(){applyNoOrder()};
+  $('bLockOrder').onchange=function(){applyLock()};
+  $('btn-clear-base').onclick=function(){$('bMachine').value='';$('bOperator').value='';syncBase();validate()};
+  $('btn-clear-order').onclick=function(){$('bOrderNo').value='';$('bItemNo').value='';$('bToolNo').value='';syncBase();validate()};
+
+  $('btn-more').onclick=function(){
+    var box=$('reasonsMore');
+    var ui=load(KEY_UI,{more:false});
+    box.style.display=(box.style.display==='block')?'none':'block';
+    var isOpen=box.style.display==='block';
+    this.innerHTML=isOpen?'Skjul årsager':'Vis flere årsager';
+    ui.more=isOpen; save(KEY_UI,ui);
+  };
+
+  $('downMin').oninput=function(){ this.value=this.value.replace(/[^0-9]/g,''); validate(); };
+  $('desc').oninput=validate; $('action').oninput=validate;
+
+  $('btn-add-hind').onclick=function(){ if(!validate(true)) return; addHind(); };
+  $('btn-clear-hind').onclick=function(){ clearHind(); };
+  $('quickLast').onchange=function(){ var v=this.value; if(v){ applyFromTs(v); this.value=''; } };
+
+  var box=$('listConfirm');
+  $('btn-clear-list').onclick=function(){ box.style.display=(box.style.display==='block')?'none':'block'; };
+  $('btn-list-cancel').onclick=function(){ box.style.display='none'; };
+  $('btn-list-do').onclick=function(){ saveEvents([]); renderLog(); refreshQuick(); box.style.display='none'; };
+
+  document.addEventListener('input', function(){ try{ save(KEY_FORM, collectFormValues()); }catch(e){} validate(); }, true);
+  document.addEventListener('change', function(){ try{ save(KEY_FORM, collectFormValues()); }catch(e){} validate(); }, true);
+  var snap=load(KEY_FORM,null); if(snap){ applyFormValues(snap); }
+
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden'){ try{ save(KEY_FORM, collectFormValues()); syncBase(); }catch(e){} } });
+  window.addEventListener('beforeunload', function(){ try{ save(KEY_FORM, collectFormValues()); syncBase(); }catch(e){} });
+  window.addEventListener('scroll', saveScroll);
+  setTimeout(restoreScroll, 0);
+
+  flushUploadQueue();
+  setInterval(flushUploadQueue, 5*60*1000);
+
+  validate();
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',bind)}else{bind()}
+</script>
+</body>
+</html>
