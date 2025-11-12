@@ -4,33 +4,37 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Plus Pack – Forhindringsregistrering (Edge/Win10)</title>
+<title>Plus Pack – Forhindringsregistrering (Edge/Win10 – Kompatibel)</title>
 <style>
-  :root{--bg:#f6f8fb;--card:#ffffff;--line:#e6ecf3;--text:#0f172a;--muted:#6b7280;--brand:#0a61ae}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
-  body{margin:0;font-family:Segoe UI,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+  body{margin:0;font-family:Segoe UI,Arial,Helvetica,sans-serif;background:#f6f8fb;color:#0f172a}
 
-  .top{background:var(--brand);color:#fff;padding:10px 16px}
+  .top{background:#0a61ae;color:#fff;padding:10px 16px}
   .top .title{font-weight:800}
 
   .wrap{max-width:1080px;margin:0 auto;padding:16px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:14px;margin-bottom:12px}
+  .card{background:#fff;border:1px solid #e6ecf3;border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,.06);padding:14px;margin-bottom:12px}
   .h{display:flex;align-items:center;justify-content:space-between;margin:0 0 8px}
   .h h3{margin:0;font-size:16px}
-  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
-  .col-12{grid-column:span 12}
-  .col-6{grid-column:span 6}
-  .col-4{grid-column:span 4}
-  .col-3{grid-column:span 3}
 
-  label{display:block;font-size:11px;color:var(--muted);margin:0 0 4px}
+  .row{display:flex;flex-wrap:wrap;margin-left:-8px;margin-right:-8px}
+  .col{padding-left:8px;padding-right:8px}
+  .col-12{flex:0 0 100%;max-width:100%}
+  .col-6{flex:0 0 50%;max-width:50%}
+  .col-4{flex:0 0 33.3333%;max-width:33.3333%}
+  .col-3{flex:0 0 25%;max-width:25%}
+  @media (max-width:900px){
+    .col-6,.col-4,.col-3{flex:0 0 100%;max-width:100%}
+  }
+
+  label{display:block;font-size:11px;color:#6b7280;margin:0 0 4px}
   label.req:after{content:" *";color:#dc2626;font-weight:700}
   .req-star{color:#dc2626;font-weight:700}
   input,select,textarea{width:100%;border:1px solid #dfe7f2;border-radius:10px;padding:10px 12px;background:#fff;font-size:15px;line-height:1.35}
   textarea{min-height:120px}
-  .hint{font-size:12px;color:var(--muted)}
-  .sep{height:1px;background:var(--line);margin:8px 0}
+  .hint{font-size:12px;color:#6b7280}
+  .sep{height:1px;background:#e6ecf3;margin:8px 0}
 
   .btn{border:1px solid #dbe4ef;background:#fff;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}
   .btn.primary{background:#e8f1ff;border-color:#cfe2ff;color:#0a3d91}
@@ -39,17 +43,14 @@
   .btn.xs{padding:4px 8px;font-size:12px;border-radius:8px}
   .btn:disabled{opacity:.55;cursor:not-allowed}
 
-  /* Chips */
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #dbe4ef;background:#f5f9ff;border-radius:999px;padding:6px 10px;font-size:13px;cursor:pointer}
   .chip input{width:16px;height:16px}
   .more{display:none;margin-top:6px}
   .errmsg{font-size:12px;color:#b91c1c;margin-top:4px}
 
-  /* Inline confirm */
   .confirm{display:none;margin-top:8px;padding:8px;border:1px solid #fecaca;background:#fff1f2;border-radius:10px}
 
-  /* Log */
   .log{list-style:none;margin:0;padding:0;border:1px dashed #dbe4ef;border-radius:10px}
   .rowL{display:flex;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid #eef2f7;background:#fff}
   .rowL:last-child{border-bottom:0}
@@ -57,8 +58,7 @@
   .meta{margin-left:auto;color:#6b7280;font-size:12px;min-width:220px;text-align:right}
   .badge{display:inline-block;border-radius:999px;padding:2px 8px;font-size:12px;border:1px solid #e2e8f0;background:#faf5ff;color:#6b21a8}
   .desctext{font-size:15px;color:#0f172a;line-height:1.45}
-
-  @media (max-width:900px){.grid{display:block}.meta{text-align:left;margin-left:0;margin-top:6px}.ts{min-width:120px}}
+  @media (max-width:900px){.meta{text-align:left;margin-left:0;margin-top:6px}.ts{min-width:120px}}
 </style>
 </head>
 <body>
@@ -68,34 +68,34 @@
     <!-- BASIS -->
     <div class="card">
       <div class="h"><h3>Basisoplysninger</h3><span class="hint">Basis gemmes og bruges ved nye registreringer.</span></div>
-      <div class="grid">
-        <div class="col-6">
+      <div class="row">
+        <div class="col col-6">
           <label class="req">Linje / maskine</label>
           <select id="bMachine"></select>
         </div>
-        <div class="col-3">
+        <div class="col col-3">
           <label class="req">Operatør</label>
           <input id="bOperator" type="text" placeholder="">
         </div>
-        <div class="col-3" style="text-align:right">
+        <div class="col col-3" style="text-align:right">
           <label>&nbsp;</label>
           <button id="btn-clear-base" class="btn" type="button">Ryd basis</button>
         </div>
 
-        <div class="col-4">
+        <div class="col col-4">
           <label class="req">Ordre nr.</label>
-          <input id="bOrderNo" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="">
+          <input id="bOrderNo" type="text" placeholder="">
         </div>
-        <div class="col-4">
+        <div class="col col-4">
           <label class="req">Vare nr.</label>
           <input id="bItemNo" type="text" placeholder="">
         </div>
-        <div class="col-4">
+        <div class="col col-4">
           <label class="req">Værktøjs nr.</label>
           <input id="bToolNo" type="text" placeholder="fx T15050-10111">
         </div>
-        <div class="col-12">
-          <div class="chips">
+        <div class="col col-12">
+          <div class="chips" style="width:100%">
             <label class="chip"><input id="bNoOrder" type="checkbox"> Ingen ordre (midlertidigt)</label>
             <label class="chip"><input id="bLockOrder" type="checkbox"> Lås nuværende ordredata</label>
             <div style="margin-left:auto"><button id="btn-clear-order" class="btn ghost" type="button">Ryd ordre</button></div>
@@ -107,8 +107,8 @@
     <!-- FORHINDRINGS REG. -->
     <div class="card">
       <div class="h"><h3>Forhindrings reg.</h3><span class="hint">Vælg årsag, skriv og tilføj.</span></div>
-      <div class="grid">
-        <div class="col-12">
+      <div class="row">
+        <div class="col col-12">
           <div class="hint" style="margin-bottom:4px"><b>Årsag <span class="req-star">*</span></b></div>
           <div id="reasonsTop" class="chips" style="margin-bottom:6px"></div>
           <div id="reasonsMore" class="more"></div>
@@ -116,28 +116,28 @@
           <div id="err-reason" class="errmsg" style="display:none">Vælg en årsag.</div>
         </div>
 
-        <div class="col-3">
+        <div class="col col-3">
           <label class="req">Nedetid (min)</label>
-          <input id="downMin" type="text" inputmode="numeric" placeholder="">
+          <input id="downMin" type="text" placeholder="">
           <div id="err-downMin" class="errmsg" style="display:none">Angiv 0–1440.</div>
         </div>
-        <div class="col-9"></div>
+        <div class="col col-9"></div>
 
-        <div class="col-12">
+        <div class="col col-12">
           <label class="req">Uddybende forklaring</label>
           <textarea id="desc" maxlength="1000" placeholder="" style="min-height:170px"></textarea>
         </div>
-        <div class="col-12">
+        <div class="col col-12">
           <label class="req">Handling</label>
           <textarea id="action" maxlength="1000" placeholder="" style="min-height:150px"></textarea>
           <div id="err-action" class="errmsg" style="display:none">Skal udfyldes.</div>
         </div>
 
-        <div class="col-6">
+        <div class="col col-6">
           <button id="btn-clear-hind" class="btn ghost" type="button">Ryd forhindring</button>
           <button id="btn-add-hind" class="btn primary" type="button" disabled>Tilføj forhindring</button>
         </div>
-        <div class="col-6" style="text-align:right">
+        <div class="col col-6" style="text-align:right">
           <select id="quickLast"><option value="">— Vælg tidligere registrering —</option></select>
         </div>
       </div>
@@ -169,16 +169,16 @@ function fmtDate(d){var dt=(d instanceof Date)?d:new Date(d);try{return dt.toLoc
 function escapeHtml(s){if(s===null||s===undefined)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\\"/g,'&quot;')}
 
 /* Keys */
-var KEY_SETTINGS='pp.fx.settings.v1';
+var KEY_SETTINGS='pp.fx.settings.v2';
 var KEY_EVENTS='pp.fx.events.v1';
 var KEY_RECENT='pp.fx.recentReasons.v1';
 var KEY_REASON='pp.fx.selectedReason.v1';
-var KEY_FORM='pp.fx.formsnapshot.v1';
+var KEY_FORM='pp.fx.formsnapshot.v2';
 var KEY_UI='pp.fx.ui.v1';
 var KEY_UI_SCROLL='pp.fx.ui.scrollY.v1';
-var KEY_FEED='pp.fx.feed.v1'; /* retry-kø */
+var KEY_FEED='pp.fx.feed.v1';
 
-/* DIN POWER AUTOMATE-URL */
+/* Power Automate */
 var FLOW_URL="https://default430cd76f558540b4b6d4f372acf579.16.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0ca282b8f7264a3e9f20b8fb30ce0e32/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gFT68gV-bdeNIAIO9ccsyGxGQnh28l7DsyRqx49QKUA";
 
 /* Data */
@@ -200,7 +200,11 @@ function restoreScroll(){ try{ var y=parseInt(localStorage.getItem(KEY_UI_SCROLL
 /* BASIS */
 function fillMachines(){
   var s=settings(), i, html='<option value="">— Vælg —</option>';
-  for(i=0;i<MACHINES.length;i++){var m=MACHINES[i], sel=(s.line===m)?' selected':''; html+='<option'+sel+'>'+m+'</option>'}
+  for(i=0;i<MACHINES.length;i++){
+    var m=MACHINES[i];
+    var sel=(s.line===m)?' selected':'';
+    html+='<option value="'+m+'"'+sel+'>'+m+'</option>';
+  }
   $('bMachine').innerHTML=html;
 }
 function syncBase(){
@@ -231,16 +235,18 @@ function applyLock(){
   syncBase();
 }
 
-/* Kun tal i Ordre nr. (Edge/Win10 tast, paste og input) */
+/* Kun tal i Ordre nr. */
 function enforceNumericInput(el){
   if(!el) return;
+  el.setAttribute('inputmode','numeric');
+  el.setAttribute('pattern','[0-9]*');
   el.addEventListener('keydown', function(evt){
     var k=evt.keyCode||evt.which;
     var allowed = (
-      (k>=48&&k<=57)||(k>=96&&k<=105)|| /* 0-9 + numpad */
-      k===8||k===9||k===13|| /* backspace, tab, enter */
-      k===37||k===39||k===35||k===36|| /* arrows, home, end */
-      k===46 /* delete */
+      (k>=48&&k<=57)||(k>=96&&k<=105)||
+      k===8||k===9||k===13||
+      k===37||k===39||k===35||k===36||
+      k===46
     );
     if(!allowed){ evt.preventDefault(); }
   }, true);
@@ -255,8 +261,6 @@ function enforceNumericInput(el){
       setTimeout(function(){ el.value=clean; syncBase(); validate(); }, 0);
     }
   }, true);
-  el.setAttribute('inputmode','numeric');
-  el.setAttribute('pattern','[0-9]*');
 }
 
 /* ÅRSAGER */
@@ -270,7 +274,7 @@ function pushRecent(v){
   while(r.length>20) r.pop();
   save(KEY_RECENT,r);
 }
-function uniqConcat(a,b){var i,seen={},out=[];for(i=0;i<a.length;i++){if(!seen[a[i]]){seen[a[i]]=1;out.push(a[i]);}}for(i=0;i<b.length;i++){if(!seen[b[i]]){seen[b[i]]=1;out.push(b[i]);}}return out;}
+function uniqConcat(a,b){var i,seen={},out=[];for(i=0;i<a.length;i++){if(!seen[a[i]]){seen[a[i]]=1;out.push(a[i]);}}for(i=0;i<b.length;i++){if(!seen[b[i]]){seen[b[i]]=1;out.push(a[i]||b[i]);}}return out;}
 function chipHTML(lbl){return '<label class="chip"><input type="radio" name="reasonRadio" value="'+lbl+'">'+lbl+'</label>';}
 function renderReasons(){
   var recent=getRecent();
@@ -331,7 +335,7 @@ function validate(show){
   return ok;
 }
 
-/* ====== FLOW-POST (kun XHR) ====== */
+/* FLOW-POST (XHR) */
 function postToFlow(payload, cb){
   try{
     var xhr=new XMLHttpRequest();
@@ -340,15 +344,15 @@ function postToFlow(payload, cb){
     xhr.onreadystatechange=function(){
       if(xhr.readyState===4){
         var ok=(xhr.status>=200 && xhr.status<300);
-        cb && cb(ok);
+        if(cb) cb(ok);
       }
     };
-    xhr.onerror=function(){ cb && cb(false); };
+    xhr.onerror=function(){ if(cb) cb(false); };
     xhr.send(JSON.stringify(payload));
-  }catch(e){ cb && cb(false); }
+  }catch(e){ if(cb) cb(false); }
 }
 
-/* Retry-kø (offline/fejl) */
+/* Retry-kø */
 function queueUpload(ev){
   var f=feed(); f.push({sent:false,payload:ev,ts:new Date().toISOString()});
   saveFeed(f); flushUploadQueue();
@@ -460,12 +464,16 @@ function applyFromTs(ts){
   validate();
 }
 
-/* Snapshot – autosave ALL inputs midt i indtastning */
+/* Snapshot – kun HINDRINGSFELTER (ikke basis) */
+function hindranceKeys(){ return ['downMin','desc','action','reasonsTop','reasonsMore','reasonRadio']; }
 function collectFormValues(){
-  var snap={}, all=document.querySelectorAll('input,select,textarea'), i;
+  var allow=hindranceKeys(), snap={}, all=document.querySelectorAll('input,textarea'), i;
   for(i=0;i<all.length;i++){
-    var el=all[i]; if(!el.id && !el.name) continue;
-    var key=el.id || (el.name?('name:'+el.name):('idx:'+i));
+    var el=all[i];
+    var id=el.id||''; var name=el.name||'';
+    var keep = (allow.indexOf(id)>=0) || (name==='reasonRadio');
+    if(!keep) continue;
+    var key=id || ('name:'+name);
     var t=(el.type||'').toLowerCase();
     if(t==='checkbox' || t==='radio'){ snap[key]={t:t,v:el.checked,val:el.value}; }
     else { snap[key]={t:t,v:el.value}; }
@@ -482,7 +490,7 @@ function applyFormValues(snap){
     var t=(el.type||'').toLowerCase();
     if(t==='checkbox' || t==='radio'){
       if(t==='radio'){
-        var group=(el.name&&document.getElementsByName(el.name))||[], i;
+        var group=(el.name&&document.getElementsByName(el.name))||[]; var i;
         for(i=0;i<group.length;i++){ var r=group[i]; if(r.value===meta.val){ r.checked=!!meta.v; } }
       }else{ el.checked=!!meta.v; }
     }else{ el.value=(meta.v!=null)?meta.v:''; }
@@ -491,8 +499,7 @@ function applyFormValues(snap){
 
 /* Bind */
 function bind(){
-  fillMachines(); renderReasons(); renderLog(); refreshQuick();
-
+  fillMachines();
   var s=settings();
   $('bMachine').value=s.line||'';
   $('bOperator').value=s.operator||'';
@@ -502,7 +509,6 @@ function bind(){
   if(s.noOrder){ $('bNoOrder').checked=true }
   applyNoOrder(); applyLock();
 
-  /* Kun tal i Ordre nr. */
   enforceNumericInput($('bOrderNo'));
 
   $('bMachine').onchange=function(){syncBase();validate()};
@@ -514,6 +520,8 @@ function bind(){
   $('bLockOrder').onchange=function(){applyLock()};
   $('btn-clear-base').onclick=function(){$('bMachine').value='';$('bOperator').value='';syncBase();validate()};
   $('btn-clear-order').onclick=function(){$('bOrderNo').value='';$('bItemNo').value='';$('bToolNo').value='';syncBase();validate()};
+
+  renderReasons(); renderLog(); refreshQuick();
 
   $('btn-more').onclick=function(){
     var box=$('reasonsMore');
@@ -542,8 +550,8 @@ function bind(){
 
   document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden'){ try{ save(KEY_FORM, collectFormValues()); syncBase(); }catch(e){} } });
   window.addEventListener('beforeunload', function(){ try{ save(KEY_FORM, collectFormValues()); syncBase(); }catch(e){} });
-  window.addEventListener('scroll', saveScroll);
-  setTimeout(restoreScroll, 0);
+  window.addEventListener('scroll', function(){ try{ localStorage.setItem(KEY_UI_SCROLL, String(window.pageYOffset||document.documentElement.scrollTop||0)); }catch(e){} });
+  setTimeout(function(){ try{ var y=parseInt(localStorage.getItem(KEY_UI_SCROLL)||'0',10)||0; window.scrollTo(0,y); }catch(e){} }, 0);
 
   flushUploadQueue();
   setInterval(flushUploadQueue, 5*60*1000);
