@@ -84,7 +84,7 @@
 
         <div class="col-4">
           <label class="req">Ordre nr.</label>
-          <input id="bOrderNo" type="text" placeholder="">
+          <input id="bOrderNo" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="">
         </div>
         <div class="col-4">
           <label class="req">Vare nr.</label>
@@ -178,7 +178,7 @@ var KEY_UI='pp.fx.ui.v1';
 var KEY_UI_SCROLL='pp.fx.ui.scrollY.v1';
 var KEY_FEED='pp.fx.feed.v1'; /* retry-kø */
 
-/* DIN POWER AUTOMATE-URL (indsat som ønsket) */
+/* DIN POWER AUTOMATE-URL */
 var FLOW_URL="https://default430cd76f558540b4b6d4f372acf579.16.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0ca282b8f7264a3e9f20b8fb30ce0e32/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=gFT68gV-bdeNIAIO9ccsyGxGQnh28l7DsyRqx49QKUA";
 
 /* Data */
@@ -229,6 +229,34 @@ function applyLock(){
     if(el){el.disabled=lock||$('bNoOrder').checked;el.style.background=(lock||$('bNoOrder').checked)?'#f3f4f6':'#fff'}
   }
   syncBase();
+}
+
+/* Kun tal i Ordre nr. (Edge/Win10 tast, paste og input) */
+function enforceNumericInput(el){
+  if(!el) return;
+  el.addEventListener('keydown', function(evt){
+    var k=evt.keyCode||evt.which;
+    var allowed = (
+      (k>=48&&k<=57)||(k>=96&&k<=105)|| /* 0-9 + numpad */
+      k===8||k===9||k===13|| /* backspace, tab, enter */
+      k===37||k===39||k===35||k===36|| /* arrows, home, end */
+      k===46 /* delete */
+    );
+    if(!allowed){ evt.preventDefault(); }
+  }, true);
+  el.addEventListener('input', function(){
+    var v=el.value||''; el.value=v.replace(/[^0-9]/g,''); syncBase(); validate();
+  }, true);
+  el.addEventListener('paste', function(evt){
+    var text='';
+    try{ text=(evt.clipboardData&&evt.clipboardData.getData)?evt.clipboardData.getData('text'):window.clipboardData.getData('Text'); }catch(e){}
+    if(typeof text==='string'){
+      var clean=text.replace(/[^0-9]/g,'');
+      setTimeout(function(){ el.value=clean; syncBase(); validate(); }, 0);
+    }
+  }, true);
+  el.setAttribute('inputmode','numeric');
+  el.setAttribute('pattern','[0-9]*');
 }
 
 /* ÅRSAGER */
@@ -303,7 +331,7 @@ function validate(show){
   return ok;
 }
 
-/* ====== FLOW-POST (ingen fetch – kun XHR) ====== */
+/* ====== FLOW-POST (kun XHR) ====== */
 function postToFlow(payload, cb){
   try{
     var xhr=new XMLHttpRequest();
@@ -357,7 +385,6 @@ function addHind(){
     name:'Forhindring – '+(reason||'')
   };
 
-  // Lokalt UI
   var arr=events(); arr.unshift({
     type:'hind',
     ts:row.ts, reason:row.reason, machine:row.machine, downtime_min:row.downtime_min,
@@ -366,7 +393,6 @@ function addHind(){
   });
   saveEvents(arr);
 
-  // Send til Flow (med retry-kø ved fejl)
   postToFlow(row, function(ok){ if(!ok){ queueUpload(row); } });
 
   pushRecent(reason);
@@ -402,7 +428,7 @@ function renderLog(){
       + escapeHtml(it.machine||'')
       + ' · <span class="hint">'+(it.downtime_min||0)+' min</span>'
       + (it.description?('<div class="desctext"><b>Uddybende:</b> '+escapeHtml(it.description)+'</div>'):'')
-      + (it.action?('<div class="desctext"><b>Handling:</b> '+escapeHtml(it.action)+'</div>'):'' );
+      + (it.action?('<div class="desctext"><b>Handling:</b> '+escapeHtml(it.action)+'</div>'):'');
     var right=document.createElement('div'); right.className='meta';
     right.innerHTML='Ordre: '+escapeHtml(it.orderNo||'')+' · Vare: '+escapeHtml(it.itemNo||'')+' · Værktøj: '+escapeHtml(it.toolNo||'')+' · Operatør: '+escapeHtml(it.operator||'');
     var del=document.createElement('button'); del.className='btn xs danger'; del.innerHTML='Slet';
@@ -475,6 +501,9 @@ function bind(){
   $('bToolNo').value=s.toolNo||'';
   if(s.noOrder){ $('bNoOrder').checked=true }
   applyNoOrder(); applyLock();
+
+  /* Kun tal i Ordre nr. */
+  enforceNumericInput($('bOrderNo'));
 
   $('bMachine').onchange=function(){syncBase();validate()};
   $('bOperator').oninput=function(){syncBase();validate()};
